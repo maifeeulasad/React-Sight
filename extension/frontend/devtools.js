@@ -58,6 +58,9 @@ const addListeners = () => {
   document.querySelector('#router-btn').addEventListener('click', draw);
   document.querySelector('#redux-btn').addEventListener('click', draw);
   document.querySelector('#dom-btn').addEventListener('click', draw);
+
+  document.querySelector('#download-graph').addEventListener('click', drawChart.downloadGraph);
+
   document.querySelector('#zoom-in-btn').addEventListener('click', drawChart.zoomIn);
   document.querySelector('#zoom-out-btn').addEventListener('click', drawChart.zoomOut);
 

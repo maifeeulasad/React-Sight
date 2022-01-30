@@ -2,8 +2,10 @@
 //  Copyright © 2018 React Sight. All rights reserved.
 
 import * as d3 from 'd3';
+import { saveAs } from 'file-saver';
 import { parseSvg } from 'd3-interpolate/src/transform/parse';
 import updateStateProps from './state-props-panel';
+
 
 // ************
 // *** Main ***
@@ -56,13 +58,13 @@ const svg = d3.select('.tree')
   .append('g');
 
 d3.select('#vSlider').on('input', () => {
-  let val = document.querySelector('#vSlider').value;
+  const val = document.querySelector('#vSlider').value;
   vSlider = val;
   update();
 });
 
 d3.select('#hSlider').on('input', () => {
-  let val = document.querySelector('#hSlider').value;
+  const val = document.querySelector('#hSlider').value;
   hSlider = val;
   update();
 });
@@ -104,7 +106,7 @@ function update(source) {
   };
 
   // Assigns the x and y position for the nodes
-  let treeData = treemap(root);
+  const treeData = treemap(root);
 
   // Compute the new tree layout.
   const nodes = treeData.descendants();
@@ -116,7 +118,7 @@ function update(source) {
   // ****************** Nodes section ***************************
 
   // Update the nodes...
-  let node = svg.selectAll('g.node')
+  const node = svg.selectAll('g.node')
     .data(nodes, (d) => {
       if (d.data.id === selectedNode) {
         updateStateProps(d.data.state, d.data.props);
@@ -125,13 +127,13 @@ function update(source) {
     });
 
   // Remove any exiting nodes
-  let nodeExit = node.exit().transition()
+  const nodeExit = node.exit().transition()
     .duration(duration)
     .attr('transform', () => `translate(${source.x},${source.y})`)
     // .attr('transform', d => 'translate(' + source.x + ',' + source.y + ')')
     .remove();
 
-  let nodeEnter = node.enter().append('g')
+  const nodeEnter = node.enter().append('g')
     .attr('class', 'node')
     .attr('transform', () => `translate(${source.x0},${source.y0})`)
     .on('click', click);
@@ -140,7 +142,7 @@ function update(source) {
   nodeEnter.append('circle')
     .attr('class', 'node')
     .attr('r', 5)
-    .style('fill', d => d._children ? 'lightsteelblue' : '#fff')
+    .style('fill', (d) => (d._children ? 'lightsteelblue' : '#fff'))
     .style('pointer-events', 'visible')
 
     .on('mouseover', function (d) {
@@ -155,16 +157,14 @@ function update(source) {
 
       const breadcrumb = document.querySelector('.breadcrumb');
       const items = breadcrumb.getElementsByTagName('*');
-      for (let i = 0; i < items.length; i++) {
+      for (let i = 0; i < items.length; i += 1) {
         const html = items[i].innerHTML;
 
         if (html === d.data.name) {
           items[i].style.color = '#B30089';
-        }
-        else if (html.slice(0, html.indexOf('[')) == d.data.name) {
+        } else if (html.slice(0, html.indexOf('[')) == d.data.name) {
           items[i].style.color = '#B30089';
-        }
-        else {
+        } else {
           items[i].style.color = '#0275d8';
         }
       }
@@ -172,23 +172,23 @@ function update(source) {
   // Add labels for the nodes
   nodeEnter.append('text')
     .attr('dy', '.35em')
-    .attr('y', d => d.children || d._children ? -24 : 24)
+    .attr('y', (d) => (d.children || d._children ? -24 : 24))
     .attr('text-anchor', 'middle')
-    .text(d => d.data.name);
+    .text((d) => d.data.name);
 
   // UPDATE
-  let nodeUpdate = nodeEnter.merge(node);
+  const nodeUpdate = nodeEnter.merge(node);
 
   // Transition to the proper position for the node
   nodeUpdate.transition()
     .duration(duration)
-    .attr('transform', d => `translate(${d.x},${d.y})`);
+    .attr('transform', (d) => `translate(${d.x},${d.y})`);
 
   // Update the node attributes and style
   nodeUpdate.select('circle.node')
     .attr('r', 10)
-    .style('fill', d => d._children ? 'lightsteelblue' : '#fff')
-    .attr('cursor', 'pointer');    // On exit reduce the node circles size to 0
+    .style('fill', (d) => (d._children ? 'lightsteelblue' : '#fff'))
+    .attr('cursor', 'pointer'); // On exit reduce the node circles size to 0
   nodeExit.select('circle')
     .attr('r', 1e-6);
 
@@ -199,36 +199,36 @@ function update(source) {
 
   // ****************** links section ***************************
   // Update the links...
-  let link = svg.selectAll('path.link')
-    .data(links, d => d.data.id);
+  const link = svg.selectAll('path.link')
+    .data(links, (d) => d.data.id);
 
   // Enter any new links at the parent's previous position.
   // Enter any new links at the parent's previous position.
-  let linkEnter = link.enter().insert('path', 'g')
+  const linkEnter = link.enter().insert('path', 'g')
     .attr('class', 'link')
-    .attr('d', d => {
-      let o = { x: source.x0, y: source.y0 };
+    .attr('d', (d) => {
+      const o = { x: source.x0, y: source.y0 };
       return diagonal(o, o);
     });
   // UPDATE
-  let linkUpdate = linkEnter.merge(link);
+  const linkUpdate = linkEnter.merge(link);
 
   // Transition back to the parent element position
   linkUpdate.transition()
     .duration(duration)
-    .attr('d', d => diagonal(d, d.parent));
+    .attr('d', (d) => diagonal(d, d.parent));
 
   // Remove any exiting links
-  let linkExit = link.exit().transition()
+  const linkExit = link.exit().transition()
     .duration(duration)
-    .attr('d', d => {
-      let o = { x: source.x, y: source.y };
+    .attr('d', (d) => {
+      const o = { x: source.x, y: source.y };
       return diagonal(o, o);
     })
     .remove();
 
   // Store the old positions for transition.
-  nodes.forEach(d => {
+  nodes.forEach((d) => {
     d.x0 = d.x;
     d.y0 = d.y;
   });
@@ -240,7 +240,7 @@ export function drawChart(treeData) {
     .size([height - 500, width - 500]);
   // gi.nodeSize([30, 30])
   // Assigns parent, children, height, depth
-  root = d3.hierarchy(treeData, d => d.children);
+  root = d3.hierarchy(treeData, (d) => d.children);
   root.x0 = height - 500 / 2;
   root.y0 = 0;
   update(root);
@@ -274,4 +274,124 @@ export function zoomOut() {
     .translate(translateX, translateY)
     .scale(newZoom);
   d3.select('.svg-content-responsive').transition().duration(1).call(zoom.transform, transform);
+}
+
+
+/** Graph download related */
+
+// Source modified from: https://www.demo2s.com/javascript/javascript-d3-js-save-svg-to-png-image.html
+
+function getSVGString(svgNode) {
+  function contains(str, arr) {
+    return arr.indexOf(str) !== -1;
+  }
+
+  function appendCSS(cssText, element) {
+    const styleElement = document.createElement('style');
+    styleElement.setAttribute('type', 'text/css');
+    styleElement.innerHTML = cssText;
+    const refNode = element.hasChildNodes() ? element.children[0] : null;
+    element.insertBefore(styleElement, refNode);
+  }
+
+  function getCSSStyles(parentElement) {
+    const selectorTextArr = [];
+
+    // Add Parent element Id and Classes to the list
+    selectorTextArr.push(`#${parentElement.id}`);
+    for (let c = 0; c < parentElement.classList.length; c += 1) { if (!contains(`.${parentElement.classList[c]}`, selectorTextArr)) selectorTextArr.push(`.${parentElement.classList[c]}`); }
+
+    // Add Children element Ids and Classes to the list
+    const nodes = parentElement.getElementsByTagName('*');
+    for (let i = 0; i < nodes.length; i += 1) {
+      const { id } = nodes[i];
+      if (!contains(`#${id}`, selectorTextArr)) { selectorTextArr.push(`#${id}`); }
+
+      const classes = nodes[i].classList;
+      for (let c = 0; c < classes.length; c += 1) { if (!contains(`.${classes[c]}`, selectorTextArr)) selectorTextArr.push(`.${classes[c]}`); }
+    }
+
+    // Extract CSS Rules
+    let extractedCSSText = '';
+    for (let i = 0; i < document.styleSheets.length; i += 1) {
+      const s = document.styleSheets[i];
+
+      // eslint-disable-next-line no-continue
+      if (!s.cssRules) continue;
+
+      const { cssRules } = s;
+      for (let r = 0; r < cssRules.length; r += 1) {
+        if (contains(cssRules[r].selectorText, selectorTextArr)) {
+          extractedCSSText += cssRules[r].cssText;
+        }
+      }
+    }
+
+
+    return extractedCSSText;
+  }
+
+
+  svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+  const cssStyleText = getCSSStyles(svgNode);
+  appendCSS(cssStyleText, svgNode);
+
+  const serializer = new XMLSerializer();
+  let svgString = serializer.serializeToString(svgNode);
+  svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
+  svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
+
+  return svgString;
+}
+
+
+function svgString2Image(svgString, widthGraph, heightGraph, format, callback) {
+  // eslint-disable-next-line no-param-reassign
+  format = format || 'png';
+
+  const imgsrc = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgString)))}`; // Convert SVG string to data URL
+  // const urlTem = imgsrc.replace(/^data:image\/[^;]+/, 'data:application/octet-stream');
+  // window.open(urlTem);
+
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  canvas.width = widthGraph;
+  canvas.height = heightGraph;
+
+  const image = new Image();
+  function loadImage() {
+    window.open('https://www.twitter.com/', '_blank');
+    context.clearRect(0, 0, widthGraph, heightGraph);
+    context.drawImage(image, 0, 0, widthGraph, heightGraph);
+
+    canvas.toBlob((blob) => {
+      window.open('https://www.twitter.com/', '_blank');
+      if (callback) {
+        window.open('https://www.twitter.com/', '_blank');
+        callback(blob);
+      }
+    });
+  }
+  image.addEventListener('load', loadImage, false);
+  image.src = imgsrc;
+}
+
+
+/** Save D3 graph */
+function save(dataBlob) {
+  saveAs(dataBlob, 'D3 vis exported to PNG.png');
+  // const objectURL = URL.createObjectURL(dataBlob);
+  // window.open(objectURL, '_blank');
+  // window.open('https://www.google.com/', '_blank');
+  // const { log } = chrome.extension.getBackgroundPage().console;
+  // log(objectURL);
+  // chrome.tabs.create({ url: objectURL });
+}
+
+
+/** Download D3 graph */
+export function downloadGraph() {
+  const svgString = getSVGString(svg.node());
+  svgString2Image(svgString, 2 * width, 2 * height, 'png', save);
 }

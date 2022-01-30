@@ -2808,6 +2808,11 @@ d3-shape@1:
   dependencies:
     d3-path "1"
 
+d3-svg-to-png@0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/d3-svg-to-png/-/d3-svg-to-png-0.1.7.tgz#1608a0d80338b164578d72a4c9a987a5c290b462"
+  integrity sha512-Zre6hJD4Gu6rGwlzhEwX23a3sI2V8CJoNWA1ULfGkdwaxZ6lzNokbLKbHPvHCkDhIYA6RAKUkXcD4RairQIg9A==
+
 d3-time-format@2:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.3.0.tgz#107bdc028667788a8924ba040faf1fbccd5a7850"
@@ -3788,6 +3793,11 @@ file-loader@6.0.0:
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
+
+file-saver@2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
 file-type@5.2.0, file-type@^5.2.0:
   version "5.2.0"
